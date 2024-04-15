@@ -22,15 +22,19 @@
 
         <?php } ?>
 
-        <label>User Name</label>
+            <div class="imgcontainer">
+        <img src="img_avatar2.png" alt="Avatar" class="avatar">
+    </div>
 
-        <input type="text" name="uname" placeholder="User Name"><br>
+    <div class="container">
+        <label for="uname"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="uname" required>
 
-        <label>Password</label>
-
-        <input type="password" name="password" placeholder="Password"><br> 
+        <label for="Password"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="Password" required>
 
         <button type="submit">Login</button>
+    </div>
 
      </form>
 
