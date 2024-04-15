@@ -2,34 +2,12 @@
 
 session_start();
 
-if (isset($_SESSION['user_name'])) {
+if (isset($_SESSION['user_name']) && $_SESSION['type'] == '1')
+{
+     include('adminpage.html');
 
- ?>
-
-<!DOCTYPE html>
-
-<html>
-
-<head>
-
-    <title>HOME</title>
-
-    <link rel="stylesheet" type="text/css" href="style.css">
-
-</head>
-
-<body>
-
-     <h1>Hello, <?php echo $_SESSION['user_name']; ?></h1>
-
-     <a href="logout.php">Logout</a>
-
-</body>
-
-</html>
-
-<?php 
-
+}else if (isset($_SESSION['user_name']) && $_SESSION['type'] == '2'){
+     include('userpage.html');
 }else{
 
      header("Location: index.php");
