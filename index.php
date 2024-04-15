@@ -1,83 +1,39 @@
-<?php 
+<!DOCTYPE html>
 
-session_start(); 
+<html>
 
-include "db_connection.php";
+<head>
 
-$conn = OpenCon();
+    <title>LOGIN</title>
 
-if (isset($_POST['uname']) && isset($_POST['password'])) {
+    <link rel="stylesheet" type="text/css" href="style.css">
 
-    function validate($data){
+</head>
 
-       $data = trim($data);
+<body>
 
-       $data = stripslashes($data);
+     <form action="login.php" method="post">
 
-       $data = htmlspecialchars($data);
+        <h2>LOGIN</h2>
 
-       return $data;
+        <?php if (isset($_GET['error'])) { ?>
 
-    }
+            <p class="error"><?php echo $_GET['error']; ?></p>
 
-    $uname = validate($_POST['uname']);
+        <?php } ?>
 
-    $pass = validate($_POST['password']);
+        <label>User Name</label>
 
-    if (empty($uname)) {
+        <input type="text" name="uname" placeholder="User Name"><br>
 
-        header("Location: index.php?error=User Name is required");
+        <label>Password</label>
 
-        exit();
+        <input type="password" name="password" placeholder="Password"><br> 
 
-    }else if(empty($pass)){
+        <button type="submit">Login</button>
 
-        header("Location: index.php?error=Password is required");
+     </form>
 
-        exit();
+</body>
 
-    }else{
-
-        $sql = "SELECT * FROM logins WHERE Username='$uname' AND Password='$pass'";
-
-        $result = mysqli_query($conn, $sql);
-
-        if (mysqli_num_rows($result) === 1) {
-
-            $row = mysqli_fetch_assoc($result);
-
-            if ($row['Username'] === $uname && $row['Password'] === $pass) {
-
-                echo "Logged in!";
-
-                $_SESSION['user_name'] = $row['Username'];
-
-                header("Location: home.php");
-
-                exit();
-
-            }else{
-
-                header("Location: index.php?error=Incorect User name or password");
-
-                exit();
-
-            }
-
-        }else{
-
-            header("Location: index.php?error=Incorect User name or password");
-
-            exit();
-
-        }
-
-    }
-
-}else{
-
-    header("Location: index.php");
-
-    exit();
-
-}
+</html>
