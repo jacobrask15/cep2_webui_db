@@ -5,7 +5,7 @@ include "db_connection.php";
 
 $conn = OpenCon();
 
-$sqlQuery = "SELECT device_id, type FROM event;
+$sqlQuery = "SELECT * FROM event";
 
 $result = mysqli_query($conn,$sqlQuery);
 
@@ -17,5 +17,6 @@ foreach ($result as $row) {
 mysqli_close($conn);
 
 echo json_encode($data);
+
 ?>
 
