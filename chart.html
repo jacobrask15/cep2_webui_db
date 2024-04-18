@@ -2,48 +2,77 @@
 <html>
 
 <head>
-    <title>Creating Dynamic Data Graph using PHP and Chart.js</title>
-    <style type="text/css">
-        BODY {
-            width: 550PX;
-        }
+    <title>GRAPHS
+    </title>
 
-        #chart-container {
-            width: 100%;
-            height: auto;
-        }
 
-        #container {
-            display: grid;
-        }
-    </style>
+    <link rel="stylesheet" href="chartstyle.css">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.2/Chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 </head>
 
 <body>
-    <div id="container">
-        <div id="chart-container">
-            <canvas id="graphCanvas2"></canvas>
+    <div class="buttons">
+        <div class="button">
+            <button onclick="showGraph('day')">Day</button>
         </div>
-
-        <div id="chart-container">
-            <canvas id="graphCanvas"></canvas>
+        <div class="button">
+            <button onclick="showGraph('week')">Week</button>
+        </div>
+        <div class="button">
+            <button onclick="showGraph('month')">Month</button>
+        </div>
+        <div class="button">
+            <button onclick="showGraph('year')">Year</button>
         </div>
     </div>
 
+    <div class="charts-container">
 
+        <div class="chart-container" id="chart-container1">
+            <canvas id="MovementGraph"></canvas>
+        </div>
+        <div class="chart-container" id="chart-container2">
+            <canvas id="ToiletGraph"></canvas>
+        </div>
+    </div>
 
     <script>
+
+
         $(document).ready(function () {
-            show_Movement_Graph();
-            showGraph2();
+            // Initially show graphs for day
+            window.Tgraph = null;
+            window.MGraph = null;
+            showGraph('day');
         });
 
+        function showGraph(interval) {
+            // destroy graphs
+            if (window.Tgraph !== null && window.MGraph !== null) {
+                window.Tgraph.destroy();
+                window.MGraph.destroy();
+            }
 
-        function show_Movement_Graph() {
+            if (interval === 'day') {
+                show_MovementGraph('day');
+                show_ToiletGraph('day');
+            } else if (interval === 'week') {
+                show_MovementGraph('week');
+                show_ToiletGraph('week');
+            } else if (interval === 'month') {
+                show_MovementGraph('month');
+                show_ToiletGraph('month');
+            } else if (interval === 'year') {
+                show_MovementGraph('year');
+                show_ToiletGraph('year');
+            }
+        }
+
+
+        function show_MovementGraph(interval) {
             {
                 $.post("data.php",
                     function (data) {
@@ -51,30 +80,39 @@
                         var movements = [];
                         var device_ids = [];
 
+                        // get current day/month/year
+                        decomposed_cur = decompose_timestamp(new Date());
+
                         for (var i in data) {
                             if (data[i].type_ !== 'movement') { continue };
-                            if (device_ids.indexOf(data[i].device_id) == -1) {
-                                device_ids.push(data[i].device_id);
-                                movements.push(1);
+
+
+
+
+
+                            decomposed_data = decompose_timestamp(new Date(data[i].timestamp_));
+
+                            if (interval === 'day' && decomposed_cur.weekNr == decomposed_data.weekNr && decomposed_cur.month == decomposed_data.month && decomposed_cur.year == decomposed_data.year) {
+                                updateArray(data[i].device_id, device_ids, movements);
+                            } else if (interval === 'week' && decomposed_cur.month == decomposed_data.month && decomposed_cur.year == decomposed_data.year) {
+                                updateArray(data[i].device_id, device_ids, movements);
+                            } else if (interval === 'month' && decomposed_cur.year == decomposed_data.year) {
+                                updateArray(data[i].device_id, device_ids, movements);
+                            } else if (interval === 'year') {
+                                updateArray(data[i].device_id, device_ids, movements);
                             }
-                            else {
-                                var index = device_ids.indexOf(data[i].device_id);
-                                movements[index] += 1;
-                            }
+
+
+
 
                         };
 
-
-
-
-                        console.log(movements);
-                        console.log(device_ids)
 
                         var chartdata = {
                             labels: device_ids,
                             datasets: [
                                 {
-                                    label: 'Movements',
+                                    label: '# Movements by Room',
                                     backgroundColor: '#49e2ff',
                                     borderColor: '#46d5f1',
                                     hoverBackgroundColor: '#CCCCCC',
@@ -85,29 +123,27 @@
                             ]
                         };
 
-                        const ctx = document.getElementById('graphCanvas2');
+                        const ctx = document.getElementById('MovementGraph');
 
-                        var barGraph = new Chart(ctx, {
+                        window.MGraph = new Chart(ctx, {
                             type: 'bar',
                             data: chartdata,
                             options: {
                                 scales: {
-                                    yAxes: [{
-                                        ticks: {
-                                            beginAtZero: true
-                                        }
-                                    }]
+                                    y: {
+                                        beginAtZero: true
+                                    }
                                 }
-                            }
+                            },
                         });
+                        console.log(MGraph);
                     });
-
             }
         }
 
         function decompose_timestamp(date) {
             var day = date.getDate();
-            var month = date.getMonth();
+            var month = date.getMonth() + 1;
             var year = date.getFullYear(); // Use getFullYear() instead of getYear()
 
             var firstJanuary = new Date(date.getFullYear(), 0, 1);
@@ -128,12 +164,8 @@
             }
         }
 
+        function show_ToiletGraph(interval) {
 
-
-
-
-
-        function showGraph2() {
             $.post("data.php", function (data) {
                 // Initialize arrays for storing toilet visits counts
                 var toiletvisitsday = [];
@@ -156,7 +188,7 @@
                     // Decompose timestamp
                     var date = new Date(data[i].timestamp_);
                     var decomposed = decompose_timestamp(date);
-                    //var [day_, week_, month_, year_] ;
+
                     // Update counts and indices
                     updateArray(decomposed.day, day, toiletvisitsday);
                     updateArray(decomposed.weekNr, week, toiletvisitsweek);
@@ -164,39 +196,39 @@
                     updateArray(decomposed.year, year, toiletvisitsyear);
                 }
 
-                console.log(day)
-                console.log(toiletvisitsday)
+                console.log(week);
 
                 // Chart data for daily visits
                 var chartdata = {
-                    labels: week,
+                    labels: interval === 'day' ? day : interval === 'week' ? week : interval === 'month' ? month : year,
                     datasets: [{
+                        axis: 'y',
                         label: 'Toiletvisits',
                         backgroundColor: '#49e2ff',
                         borderColor: '#46d5f1',
                         hoverBackgroundColor: '#CCCCCC',
                         hoverBorderColor: '#666666',
-                        data: toiletvisitsweek
+                        data: interval === 'day' ? toiletvisitsday : interval === 'week' ? toiletvisitsweek : interval === 'month' ? toiletvisitsmonth : toiletvisitsyear,
                     }],
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }]
-                        }
-                    }
                 };
 
                 // Render chart
-                var graphTarget = $("#graphCanvas");
-                var barGraph = new Chart(graphTarget, {
+                var graphTarget = $("#ToiletGraph");
+                window.Tgraph = new Chart(graphTarget, {
                     type: 'bar',
-                    data: chartdata
+                    data: chartdata,
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    },
                 });
             });
+
         }
+
     </script>
 
 </body>
