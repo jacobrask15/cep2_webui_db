@@ -12,6 +12,10 @@
             width: 100%;
             height: auto;
         }
+
+        #container {
+            display: grid;
+        }
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.2/Chart.js"></script>
@@ -20,13 +24,22 @@
 </head>
 
 <body>
-    <div id="chart-container">
-        <canvas id="graphCanvas2"></canvas>
+    <div id="container">
+        <div id="chart-container">
+            <canvas id="graphCanvas2"></canvas>
+        </div>
+
+        <div id="chart-container">
+            <canvas id="graphCanvas"></canvas>
+        </div>
     </div>
+
+
 
     <script>
         $(document).ready(function () {
             show_Movement_Graph();
+            showGraph2();
         });
 
 
@@ -39,6 +52,7 @@
                         var device_ids = [];
 
                         for (var i in data) {
+                            if (data[i].type_ !== 'movement') { continue };
                             if (device_ids.indexOf(data[i].device_id) == -1) {
                                 device_ids.push(data[i].device_id);
                                 movements.push(1);
@@ -47,10 +61,10 @@
                                 var index = device_ids.indexOf(data[i].device_id);
                                 movements[index] += 1;
                             }
-                        }
 
-                        device_ids.splice(0, 1);
-                        movements.splice(0, 1);
+                        };
+
+
 
 
                         console.log(movements);
@@ -87,7 +101,101 @@
                             }
                         });
                     });
+
             }
+        }
+
+        function decompose_timestamp(date) {
+            var day = date.getDate();
+            var month = date.getMonth();
+            var year = date.getFullYear(); // Use getFullYear() instead of getYear()
+
+            var firstJanuary = new Date(date.getFullYear(), 0, 1);
+            var dayNr = Math.ceil((date - firstJanuary) / (24 * 60 * 60 * 1000));
+            var weekNr = Math.ceil((dayNr + firstJanuary.getDay()) / 7);
+
+            return { day: day, weekNr: weekNr, month: month, year: year };
+        }
+
+        // Helper function to update arrays
+        function updateArray(value, array, counterArray) {
+            var index = array.indexOf(value);
+            if (index === -1) {
+                array.push(value);
+                counterArray.push(1);
+            } else {
+                counterArray[index]++;
+            }
+        }
+
+
+
+
+
+
+        function showGraph2() {
+            $.post("data.php", function (data) {
+                // Initialize arrays for storing toilet visits counts
+                var toiletvisitsday = [];
+                var toiletvisitsweek = [];
+                var toiletvisitsmonth = [];
+                var toiletvisitsyear = [];
+
+                // Initialize arrays for storing timestamps
+                var day = [];
+                var week = [];
+                var month = [];
+                var year = [];
+
+                // Loop through data
+                for (var i in data) {
+                    // Skip entries that are not related to toilet visits
+                    if (data[i].type_ !== "toilet") {
+                        continue;
+                    }
+                    // Decompose timestamp
+                    var date = new Date(data[i].timestamp_);
+                    var decomposed = decompose_timestamp(date);
+                    //var [day_, week_, month_, year_] ;
+                    // Update counts and indices
+                    updateArray(decomposed.day, day, toiletvisitsday);
+                    updateArray(decomposed.weekNr, week, toiletvisitsweek);
+                    updateArray(decomposed.month, month, toiletvisitsmonth);
+                    updateArray(decomposed.year, year, toiletvisitsyear);
+                }
+
+                console.log(day)
+                console.log(toiletvisitsday)
+
+                // Chart data for daily visits
+                var chartdata = {
+                    labels: week,
+                    datasets: [{
+                        label: 'Toiletvisits',
+                        backgroundColor: '#49e2ff',
+                        borderColor: '#46d5f1',
+                        hoverBackgroundColor: '#CCCCCC',
+                        hoverBorderColor: '#666666',
+                        data: toiletvisitsweek
+                    }],
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                };
+
+                // Render chart
+                var graphTarget = $("#graphCanvas");
+                var barGraph = new Chart(graphTarget, {
+                    type: 'bar',
+                    data: chartdata
+                });
+            });
         }
     </script>
 
