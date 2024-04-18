@@ -35,24 +35,25 @@ BODY {
                 function (data)
                 {
                     console.log(data);
-                     var name = [];
-                    var marks = [];
+                    var type = [];
+                    var timpestamps = [];
+
 
                     for (var i in data) {
-                        name.push(data[i].student_name);
-                        marks.push(data[i].marks);
+                        type.push(data[i].type);
+                        timpestamps.push(data[i].timpestamps);
                     }
 
                     var chartdata = {
-                        labels: name,
+                        labels: timpestamps,
                         datasets: [
                             {
-                                label: 'Student Marks',
+                                label: 'type',
                                 backgroundColor: '#49e2ff',
                                 borderColor: '#46d5f1',
                                 hoverBackgroundColor: '#CCCCCC',
                                 hoverBorderColor: '#666666',
-                                data: marks
+                                data: type
                             }
                         ]
                     };
