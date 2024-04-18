@@ -14,44 +14,47 @@
         }
     </style>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.2/Chart.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 </head>
 
 <body>
     <div id="chart-container">
-        <canvas id="graphCanvas"></canvas>
+        <canvas id="graphCanvas2"></canvas>
     </div>
 
     <script>
         $(document).ready(function () {
-            showGraph();
+            show_Movement_Graph();
         });
 
 
-        function showGraph() {
+        function show_Movement_Graph() {
             {
                 $.post("data.php",
                     function (data) {
                         console.log(data);
-                        var type = [];
+                        var movements = [];
                         var device_ids = [];
 
-
                         for (var i in data) {
-
                             if (device_ids.indexOf(data[i].device_id) == -1) {
                                 device_ids.push(data[i].device_id);
-                                type.push(1);
+                                movements.push(1);
                             }
                             else {
                                 var index = device_ids.indexOf(data[i].device_id);
-                                type[index] += 1;
+                                movements[index] += 1;
                             }
                         }
 
-                        console.log(type);
+                        device_ids.splice(0, 1);
+                        movements.splice(0, 1);
+
+
+                        console.log(movements);
+                        console.log(device_ids)
 
                         var chartdata = {
                             labels: device_ids,
@@ -62,16 +65,26 @@
                                     borderColor: '#46d5f1',
                                     hoverBackgroundColor: '#CCCCCC',
                                     hoverBorderColor: '#666666',
-                                    data: type
+                                    data: movements,
+                                    borderWidth: 1
                                 }
                             ]
                         };
 
-                        var graphTarget = $("#graphCanvas");
+                        const ctx = document.getElementById('graphCanvas2');
 
-                        var barGraph = new Chart(graphTarget, {
+                        var barGraph = new Chart(ctx, {
                             type: 'bar',
-                            data: chartdata
+                            data: chartdata,
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                }
+                            }
                         });
                     });
             }
