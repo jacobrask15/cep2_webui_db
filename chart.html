@@ -54,7 +54,7 @@
 
 
                     var chartdata = {
-                        labels: timpestamps,
+                        labels: device_ids,
                         datasets: [
                             {
                                 label: 'type',
@@ -75,55 +75,89 @@
                     });
                 });
             }
+        }  
+
+        function decompose_timestamp(date) {
+            var day = date.getDate();
+            var month = date.getMonth();
+            var year = date.getFullYear(); // Use getFullYear() instead of getYear()
+
+            var firstJanuary = new Date(date.getFullYear(), 0, 1);
+            var dayNr = Math.ceil((date - firstJanuary) / (24 * 60 * 60 * 1000));
+            var weekNr = Math.ceil((dayNr + firstJanuary.getDay()) / 7);
+
+            return { day: day, weekNr: weekNr, month: month, year: year };
         }
 
-
-        function showGraph2()
-        {
-            {
-                $.post("data.php",
-                function (data)
-                {
-
-                    console.log(data);
-                    var toiletvisits = [];
-
-                    //user can choose the following
-                    var day = [];
-                    var month = [];
-                    var year = [];
-
-
-
-                    for (var i in data) {
-                        timpestamps.push(data[i].device_id);
-                        var index = timpestamps.find(device_id); timpestamps.findIn
-                                type[index] += 1;
-                            }
-
-                        var chartdata = {
-                            labels: device_ids,
-                            datasets: [
-                                {
-                                    label: 'Movements',
-                                    backgroundColor: '#49e2ff',
-                                    borderColor: '#46d5f1',
-                                    hoverBackgroundColor: '#CCCCCC',
-                                    hoverBorderColor: '#666666',
-                                    data: type
-                                }
-                            ]
-                        };
-
-                        var graphTarget = $("#graphCanvas");
-
-                        var barGraph = new Chart(graphTarget, {
-                            type: 'bar',
-                            data: chartdata
-                        });
-                    });
+            // Helper function to update arrays
+            function updateArray(value, array, counterArray) {
+                var index = array.indexOf(value);
+                if (index === -1) {
+                    array.push(value);
+                    counterArray.push(1);
+                } else {
+                    counterArray[index]++;
+                }
             }
+
+
+
+
+
+
+        function showGraph2() {
+    $.post("data.php", function(data) {
+        // Initialize arrays for storing toilet visits counts
+        var toiletvisitsday = [];
+        var toiletvisitsweek = [];
+        var toiletvisitsmonth = [];
+        var toiletvisitsyear = [];
+
+        // Initialize arrays for storing timestamps
+        var day = [];
+        var week = [];
+        var month = [];
+        var year = [];
+
+        // Loop through data
+        for (var i in data) {
+            // Skip entries that are not related to toilet visits
+            if (entry.type !== "toilet") {
+                return;
+            }
+            // Decompose timestamp
+            var date = new Date(data[i].timestamp);
+            var [day_, week_, month_, year_] = decompose_timestamp(date);
+            // Update counts and indices
+            updateArray(day_, day, toiletvisitsday);
+            updateArray(week_, week, toiletvisitsweek);
+            updateArray(month_, month, toiletvisitsmonth);
+            updateArray(year_, year, toiletvisitsyear);
         }
+
+        // Chart data for daily visits
+        var chartdata = {
+            labels: day,
+            datasets: [{
+                label: 'Toiletvisits',
+                backgroundColor: '#49e2ff',
+                borderColor: '#46d5f1',
+                hoverBackgroundColor: '#CCCCCC',
+                hoverBorderColor: '#666666',
+                data: toiletvisitsday
+            }]
+        };
+
+        // Render chart
+        var graphTarget = $("#graphCanvas");
+        var barGraph = new Chart(graphTarget, {
+            type: 'bar',
+            data: chartdata
+        });
+    });
+}
+
+
 
 
 
