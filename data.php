@@ -5,7 +5,7 @@ include "db_connection.php";
 
 $conn = OpenCon();
 
-$sqlQuery = "SELECT timestamp, type FROM event;
+$sqlQuery = "SELECT device_id, type FROM event;
 
 $result = mysqli_query($conn,$sqlQuery);
 

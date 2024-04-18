@@ -40,8 +40,9 @@ BODY {
 
 
                     for (var i in data) {
-                        type.push(1);
-                        timpestamps.push(data[i].timpestamps);
+                        timpestamps.push(data[i].device_id);
+                        var index = timpestamps.find(device_id);
+                        type[index] += 1;
                     }
 
 
