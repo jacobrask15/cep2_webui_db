@@ -3,7 +3,7 @@
 
 <head>
     <title>Creating Dynamic Data Graph using PHP and Chart.js</title>
-    <style movements="text/css">
+    <style type="text/css">
         BODY {
             width: 550PX;
         }
@@ -35,22 +35,23 @@
                 $.post("data.php",
                     function (data) {
                         console.log(data);
-                        var movements = [];
+                        var type = [];
                         var device_ids = [];
 
 
                         for (var i in data) {
-                            if (data[i].type == 'movement')
-                                if (device_ids.indexOf(data[i].device_id) == -1) {
-                                    device_ids.push(data[i].device_id);
-                                    movements.push(1);
-                                }
-                                else {
-                                    var index = device_ids.indexOf(data[i].device_id);
-                                    movements[index] += 1;
-                                }
+
+                            if (device_ids.indexOf(data[i].device_id) == -1) {
+                                device_ids.push(data[i].device_id);
+                                type.push(1);
+                            }
+                            else {
+                                var index = device_ids.indexOf(data[i].device_id);
+                                type[index] += 1;
+                            }
                         }
 
+                        console.log(type);
 
                         var chartdata = {
                             labels: device_ids,
@@ -61,7 +62,7 @@
                                     borderColor: '#46d5f1',
                                     hoverBackgroundColor: '#CCCCCC',
                                     hoverBorderColor: '#666666',
-                                    data: movements
+                                    data: type
                                 }
                             ]
                         };
@@ -69,7 +70,7 @@
                         var graphTarget = $("#graphCanvas");
 
                         var barGraph = new Chart(graphTarget, {
-                            movements: 'bar',
+                            type: 'bar',
                             data: chartdata
                         });
                     });
