@@ -46,9 +46,10 @@
                                 type.push(1);
                             }
                             else {
-                                var index = device_ids.indexOf(data[i].device_id); timpestamps.findIn
-                        type[index] += 1;
+                                var index = device_ids.indexOf(data[i].device_id);
+                                type[index] += 1;
                     }
+                }
 
 
 
@@ -99,9 +100,6 @@
                         var index = timpestamps.find(device_id); timpestamps.findIn
                                 type[index] += 1;
                             }
-                        }
-
-                        console.log(type);
 
                         var chartdata = {
                             labels: device_ids,
