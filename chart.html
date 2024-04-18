@@ -145,7 +145,16 @@
                 hoverBackgroundColor: '#CCCCCC',
                 hoverBorderColor: '#666666',
                 data: toiletvisitsday
-            }]
+            }],
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
         };
 
         // Render chart
