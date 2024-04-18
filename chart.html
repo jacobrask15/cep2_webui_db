@@ -46,7 +46,57 @@
                                 type.push(1);
                             }
                             else {
-                                var index = device_ids.indexOf(data[i].device_id);
+                                var index = device_ids.indexOf(data[i].device_id); timpestamps.findIn
+                        type[index] += 1;
+                    }
+
+
+
+                    var chartdata = {
+                        labels: timpestamps,
+                        datasets: [
+                            {
+                                label: 'type',
+                                backgroundColor: '#49e2ff',
+                                borderColor: '#46d5f1',
+                                hoverBackgroundColor: '#CCCCCC',
+                                hoverBorderColor: '#666666',
+                                data: type
+                            }
+                        ]
+                    };
+
+                    var graphTarget = $("#graphCanvas");
+
+                    var barGraph = new Chart(graphTarget, {
+                        type: 'bar',
+                        data: chartdata
+                    });
+                });
+            }
+        }
+
+
+        function showGraph2()
+        {
+            {
+                $.post("data.php",
+                function (data)
+                {
+
+                    console.log(data);
+                    var toiletvisits = [];
+
+                    //user can choose the following
+                    var day = [];
+                    var month = [];
+                    var year = [];
+
+
+
+                    for (var i in data) {
+                        timpestamps.push(data[i].device_id);
+                        var index = timpestamps.find(device_id); timpestamps.findIn
                                 type[index] += 1;
                             }
                         }
@@ -76,7 +126,18 @@
                     });
             }
         }
-    </script>
+
+
+
+
+
+
+
+
+
+
+
+        </script>
 
 </body>
 
