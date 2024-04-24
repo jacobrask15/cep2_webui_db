@@ -26,7 +26,7 @@
         <img src="dawg.jpg" alt="Avatar" class="avatar">
     </div>
 
-    <div class="container">
+    <div class="profile_container">
         <label for="uname"><b>Username</b></label>
         <input type="text" placeholder="Enter Username" name="uname" required>
 
