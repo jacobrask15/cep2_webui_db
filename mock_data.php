@@ -21,7 +21,7 @@ for ($x = 0; $x <= 10; $x++) {
     $second = $rand % 60;
     $m = $rand % 50 + 50;
     $sqlquery = "INSERT INTO `event` (`timestamp_`, `loglevel`, `type_`, `device_id`, `device_type`, `measurement`) VALUES
-('2024-$month-$day $hour:$minute:$second', 'Informational', 'movement', 'ROOM $room', 'PIR', '$m')";
+('2024-$month-$day $hour:$minute:$second', 'Informational', 'toilet', 'ROOM $room', 'PIR', '$m')";
 
 
     mysqli_query($conn, $sqlquery);

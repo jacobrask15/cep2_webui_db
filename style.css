@@ -17,28 +17,9 @@ input[type=password] {
   box-sizing: border-box;
 }
 
-/* Set a style for all buttons */
-button {
-  background-color: #04AA6D;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-}
 
-/* Add a hover effect for buttons */
-button:hover {
-  opacity: 0.8;
-}
 
-/* Extra style for the cancel button (red) */
-.cancelbtn {
-  width: auto;
-  padding: 10px 18px;
-  background-color: #f44336;
-}
+
 
 /* Center the avatar image inside this container */
 .imgcontainer {
@@ -54,8 +35,19 @@ img.avatar {
 
 /* Add padding to containers */
 .container {
+  display: grid;
+  width: 90%;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns with equal width */
+  grid-template-rows: repeat(2, 1fr); /* 2 rows with equal height */
+  gap: 10px; /* Adjust the gap between cells */
+}
+
+.profile_container {
   padding: 16px;
   width: 270px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 10px;
 }
 
 /* The "Forgot password" text */

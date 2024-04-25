@@ -7,6 +7,7 @@
 
 
     <link rel="stylesheet" href="chartstyle.css">
+    <link rel="stylesheet" href="style.css">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -14,28 +15,44 @@
 </head>
 
 <body>
-    <div class="buttons">
-        <div class="button">
-            <button onclick="showGraph('day')">Day</button>
-        </div>
-        <div class="button">
-            <button onclick="showGraph('week')">Week</button>
-        </div>
-        <div class="button">
-            <button onclick="showGraph('month')">Month</button>
-        </div>
-        <div class="button">
-            <button onclick="showGraph('year')">Year</button>
-        </div>
-    </div>
 
-    <div class="charts-container">
+    <div class="container">
 
         <div class="chart-container" id="chart-container1">
             <canvas id="MovementGraph"></canvas>
+            <select id="movementInterval" onchange="show_MovementGraph(this.value)">
+                <option value="day">Day</option>
+                <option value="week">Week</option>
+                <option value="month">Month</option>
+                <option value="year">Year</option>
+            </select>
         </div>
         <div class="chart-container" id="chart-container2">
             <canvas id="ToiletGraph"></canvas>
+            <select id="toiletInterval" onchange="show_ToiletGraph(this.value)">
+                <option value="day">Day</option>
+                <option value="week">Week</option>
+                <option value="month">Month</option>
+                <option value="year">Year</option>
+            </select>
+        </div>
+        <div class="chart-container" id="chart-container3">
+            <canvas id=""></canvas>
+            <select id="">
+                <option value="day">Day</option>
+                <option value="week">Week</option>
+                <option value="month">Month</option>
+                <option value="year">Year</option>
+            </select>
+        </div>
+        <div class="chart-container" id="chart-container4">
+            <canvas id=""></canvas>
+            <select id="">
+                <option value="day">Day</option>
+                <option value="week">Week</option>
+                <option value="month">Month</option>
+                <option value="year">Year</option>
+            </select>
         </div>
     </div>
 
@@ -46,25 +63,18 @@
             // Initially show graphs for day
             window.Tgraph = null;
             window.MGraph = null;
-            showGraph('day');
+            show_MovementGraph('day');
+            show_ToiletGraph('day');
         });
 
-        function showGraph(interval) {
-            // destroy graphs
-            if (window.Tgraph !== null && window.MGraph !== null) {
-                window.Tgraph.destroy();
-                window.MGraph.destroy();
-            }
-
-            show_MovementGraph(interval);
-            show_ToiletGraph(interval);
-
-
-        }
 
 
         function show_MovementGraph(interval) {
             {
+                if (window.MGraph !== null) {
+                    window.MGraph.destroy();
+                }
+                console.log(interval);
                 $.post("data.php",
                     function (data) {
                         console.log(data);
@@ -77,7 +87,7 @@
                         for (var i in data) {
                             if (data[i].type_ !== 'movement') { continue };
 
-                            decomposed_data = decompose_timestamp(new Date(data[i].timestamp_));
+                              decomposed_data = decompose_timestamp(new Date(data[i].timestamp_));
 
                             if (interval === 'day' && decomposed_cur.weekNr == decomposed_data.weekNr && decomposed_cur.month == decomposed_data.month && decomposed_cur.year == decomposed_data.year) {
                                 updateArray(data[i].device_id, device_ids, movements);
@@ -152,7 +162,9 @@
         }
 
         function show_ToiletGraph(interval) {
-
+            if (window.Tgraph !== null) {
+                window.Tgraph.destroy();
+            }
             $.post("data.php", function (data) {
                 // Initialize arrays for storing toilet visits counts
                 var toiletvisitsday = [];
