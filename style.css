@@ -1,3 +1,7 @@
+:root {
+  Max-width: 100%;
+}
+
 form {
   border: 3px solid #f1f1f1;
   width: 300px;
@@ -36,10 +40,11 @@ img.avatar {
   border-radius: 50%;
 }
 
-/* Add padding to containers */
+/* unlimited width */
 .container {
   display: grid;
-  width: mx-auto;
+  width: 90%;
+
   grid-template-columns: repeat(2, 1fr);
   /* 2 columns with equal width */
   grid-template-rows: repeat(2, 1fr);
@@ -47,6 +52,21 @@ img.avatar {
   gap: 10px;
   /* Adjust the gap between cells */
 }
+
+/* Smaller screens */
+@media screen and (max-width: 1920px) {
+  .container {
+    display: grid;
+    width: 73.5%;
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 columns with equal width */
+    grid-template-rows: repeat(2, 1fr);
+    /* 2 rows with equal height */
+    gap: 10px;
+    /* Adjust the gap between cells */
+  }
+}
+
 
 .profile_container {
   padding: 16px;
@@ -64,17 +84,17 @@ span.psw {
 
 body {
   text-align: center;
+  width: auto;
 }
 
 
-/* Change styles for span and cancel button on extra small screens */
-@media screen and (max-width: 300px) {
-  span.psw {
-    display: block;
-    float: none;
-  }
 
-  .cancelbtn {
-    width: 100%;
-  }
+#insertHere {
+  margin-top: 10px;
+}
+
+#insertHere p {
+  margin: 5px 0;
+  font-size: 16px;
+  color: #ff0000;
 }

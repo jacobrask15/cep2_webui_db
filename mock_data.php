@@ -5,7 +5,7 @@ include "db_connection.php";
 
 $conn = OpenCon();
 
-for ($x = 0; $x <= 10; $x++) {
+for ($x = 0; $x <= 100; $x++) {
     $rand = rand();
     $room = $rand % 5 + 1;
     $day = $rand % 30 + 1;
@@ -19,9 +19,9 @@ for ($x = 0; $x <= 10; $x++) {
     $hour = $rand % 24;
     $minute = $rand % 60;
     $second = $rand % 60;
-    $m = $rand % 50 + 50;
+    $m = ($rand % 840) + 60;
     $sqlquery = "INSERT INTO `event` (`timestamp_`, `loglevel`, `type_`, `device_id`, `device_type`, `measurement`) VALUES
-('2024-$month-$day $hour:$minute:$second', 'Informational', 'toilet', 'ROOM $room', 'PIR', '$m')";
+('2024-$month-$day $hour:$minute:$second', 'Informational', 'ToiletDuration', 'ROOM $room', 'PIR', '$m')";
 
 
     mysqli_query($conn, $sqlquery);
