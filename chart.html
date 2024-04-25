@@ -56,19 +56,10 @@
                 window.MGraph.destroy();
             }
 
-            if (interval === 'day') {
-                show_MovementGraph('day');
-                show_ToiletGraph('day');
-            } else if (interval === 'week') {
-                show_MovementGraph('week');
-                show_ToiletGraph('week');
-            } else if (interval === 'month') {
-                show_MovementGraph('month');
-                show_ToiletGraph('month');
-            } else if (interval === 'year') {
-                show_MovementGraph('year');
-                show_ToiletGraph('year');
-            }
+            show_MovementGraph(interval);
+            show_ToiletGraph(interval);
+
+
         }
 
 
@@ -86,15 +77,11 @@
                         for (var i in data) {
                             if (data[i].type_ !== 'movement') { continue };
 
-
-
-
-
                             decomposed_data = decompose_timestamp(new Date(data[i].timestamp_));
 
                             if (interval === 'day' && decomposed_cur.weekNr == decomposed_data.weekNr && decomposed_cur.month == decomposed_data.month && decomposed_cur.year == decomposed_data.year) {
                                 updateArray(data[i].device_id, device_ids, movements);
-                            } else if (interval === 'week' && decomposed_cur.month == decomposed_data.month && decomposed_cur.year == decomposed_data.year) {
+                            } else if (interval === 'week' && decomposed_cur.year == decomposed_data.year) {
                                 updateArray(data[i].device_id, device_ids, movements);
                             } else if (interval === 'month' && decomposed_cur.year == decomposed_data.year) {
                                 updateArray(data[i].device_id, device_ids, movements);
