@@ -18,7 +18,10 @@ input[type=password] {
 }
 
 
-
+.chart-container {
+  border: 1px solid black;
+  margin: 7%;
+}
 
 
 /* Center the avatar image inside this container */
@@ -36,10 +39,13 @@ img.avatar {
 /* Add padding to containers */
 .container {
   display: grid;
-  width: 90%;
-  grid-template-columns: repeat(2, 1fr); /* 2 columns with equal width */
-  grid-template-rows: repeat(2, 1fr); /* 2 rows with equal height */
-  gap: 10px; /* Adjust the gap between cells */
+  width: mx-auto;
+  grid-template-columns: repeat(2, 1fr);
+  /* 2 columns with equal width */
+  grid-template-rows: repeat(2, 1fr);
+  /* 2 rows with equal height */
+  gap: 10px;
+  /* Adjust the gap between cells */
 }
 
 .profile_container {
