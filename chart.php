@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if (!isset($_SESSION["user_name"])) {
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -58,7 +66,7 @@
             window.MGraph = null;
             window.TDGraph = null;
             fetchData();
-            
+
 
         });
 
@@ -67,7 +75,7 @@
                 data = response; // Store the response in the global variable
                 console.log(data);
             });
-            
+
             show_log();
             show_MovementGraph('day');
             show_ToiletGraph('day');
@@ -80,61 +88,61 @@
                     window.MGraph.destroy();
                 }
 
-                    if(data) {
+                if (data) {
 
-                        var movements = [];
-                        var device_ids = [];
+                    var movements = [];
+                    var device_ids = [];
 
-                        // get current day/month/year
-                        decomposed_cur = decompose_timestamp(new Date());
+                    // get current day/month/year
+                    decomposed_cur = decompose_timestamp(new Date());
 
-                        for (var i in data) {
-                            if (data[i].type_ !== 'movement') { continue };
+                    for (var i in data) {
+                        if (data[i].type_ !== 'movement') { continue };
 
-                            decomposed_data = decompose_timestamp(new Date(data[i].timestamp_));
+                        decomposed_data = decompose_timestamp(new Date(data[i].timestamp_));
 
-                            if (interval === 'day' && decomposed_cur.weekNr == decomposed_data.weekNr && decomposed_cur.month == decomposed_data.month && decomposed_cur.year == decomposed_data.year) {
-                                updateArray(data[i].device_id, device_ids, movements);
-                            } else if (interval === 'week' && decomposed_cur.year == decomposed_data.year) {
-                                updateArray(data[i].device_id, device_ids, movements);
-                            } else if (interval === 'month' && decomposed_cur.year == decomposed_data.year) {
-                                updateArray(data[i].device_id, device_ids, movements);
-                            } else if (interval === 'year') {
-                                updateArray(data[i].device_id, device_ids, movements);
-                            }
+                        if (interval === 'day' && decomposed_cur.weekNr == decomposed_data.weekNr && decomposed_cur.month == decomposed_data.month && decomposed_cur.year == decomposed_data.year) {
+                            updateArray(data[i].device_id, device_ids, movements);
+                        } else if (interval === 'week' && decomposed_cur.year == decomposed_data.year) {
+                            updateArray(data[i].device_id, device_ids, movements);
+                        } else if (interval === 'month' && decomposed_cur.year == decomposed_data.year) {
+                            updateArray(data[i].device_id, device_ids, movements);
+                        } else if (interval === 'year') {
+                            updateArray(data[i].device_id, device_ids, movements);
+                        }
 
-                        };
-
-                        var chartdata = {
-                            labels: device_ids,
-                            datasets: [
-                                {
-                                    label: 'Number of Movements by Room',
-                                    backgroundColor: '#66CC99', // Cooler green color
-                                    borderColor: '#46d5f1',
-                                    hoverBackgroundColor: '#CCCCCC',
-                                    hoverBorderColor: '#666666',
-                                    data: movements,
-                                    borderWidth: 1
-                                }
-                            ]
-                        };
-
-                        const ctx = document.getElementById('MovementGraph');
-
-                        window.MGraph = new Chart(ctx, {
-                            type: 'bar',
-                            data: chartdata,
-                            options: {
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            },
-                        });
-                        
                     };
+
+                    var chartdata = {
+                        labels: device_ids,
+                        datasets: [
+                            {
+                                label: 'Number of Movements by Room',
+                                backgroundColor: '#66CC99', // Cooler green color
+                                borderColor: '#46d5f1',
+                                hoverBackgroundColor: '#CCCCCC',
+                                hoverBorderColor: '#666666',
+                                data: movements,
+                                borderWidth: 1
+                            }
+                        ]
+                    };
+
+                    const ctx = document.getElementById('MovementGraph');
+
+                    window.MGraph = new Chart(ctx, {
+                        type: 'bar',
+                        data: chartdata,
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        },
+                    });
+
+                };
             }
         }
 
@@ -165,7 +173,7 @@
             if (window.Tgraph !== null) {
                 window.Tgraph.destroy();
             }
-            if(data) {
+            if (data) {
                 // Initialize arrays for storing toilet visits counts
                 var toiletvisitsday = [];
                 var toiletvisitsweek = [];
@@ -235,55 +243,55 @@
                 }
 
                 if (data) {
-                        var durations = [];
-                        var visits = [];
+                    var durations = [];
+                    var visits = [];
 
 
-                        var count = 1;
-                        for (var i in data) {
-                            if (data[i].type_ !== 'ToiletDuration') { continue };
-                            if (visits.length >= interval) { break; };
+                    var count = 1;
+                    for (var i in data) {
+                        if (data[i].type_ !== 'ToiletDuration') { continue };
+                        if (visits.length >= interval) { break; };
 
-                            if (visits.length < interval) {
-                                visits.push(count);
-                                durations.push(data[i].measurement / 60);
-                                count++;
-                            }
-                        };
-
-                        console.log(visits);
-                        console.log(durations);
-
-                        var chartdata = {
-                            labels: visits,
-                            datasets: [
-                                {
-                                    label: 'Latest ' + interval + ' Toilet Visit Durations (minutes)',
-                                    backgroundColor: '#49e2ff',
-                                    borderColor: '#46d5f1',
-                                    hoverBackgroundColor: '#CCCCCC',
-                                    hoverBorderColor: '#666666',
-                                    data: durations,
-                                    borderWidth: 1
-                                }
-                            ]
-                        };
-
-                        const ctx = document.getElementById('ToiletDurationGraph');
-
-                        window.TDGraph = new Chart(ctx, {
-                            type: 'line',
-                            data: chartdata,
-                            options: {
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            },
-                        });
-
+                        if (visits.length < interval) {
+                            visits.push(count);
+                            durations.push(data[i].measurement / 60);
+                            count++;
+                        }
                     };
+
+                    console.log(visits);
+                    console.log(durations);
+
+                    var chartdata = {
+                        labels: visits,
+                        datasets: [
+                            {
+                                label: 'Latest ' + interval + ' Toilet Visit Durations (minutes)',
+                                backgroundColor: '#49e2ff',
+                                borderColor: '#46d5f1',
+                                hoverBackgroundColor: '#CCCCCC',
+                                hoverBorderColor: '#666666',
+                                data: durations,
+                                borderWidth: 1
+                            }
+                        ]
+                    };
+
+                    const ctx = document.getElementById('ToiletDurationGraph');
+
+                    window.TDGraph = new Chart(ctx, {
+                        type: 'line',
+                        data: chartdata,
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        },
+                    });
+
+                };
             }
         }
 
@@ -295,31 +303,31 @@
 
             if (data) {
 
-                    //console.log(data);
-                    var dict = {};
-                    dict["Informational"] = 0;
-                    dict["warning"] = 0;
-                    dict["error"] = 0;
+                //console.log(data);
+                var dict = {};
+                dict["Informational"] = 0;
+                dict["warning"] = 0;
+                dict["error"] = 0;
 
-                    for (var i in data) {
-                        if (data[i].loglevel === "Informational") {
-                            dict["Informational"] += 1;
-                            console.log("here")
-                        } else if (data[i].loglevel === "warning") {
-                            dict["warning"] += 1;
-                        } else if (data[i].loglevel === "error") {
-                            dict["error"] += 1;
-                        }
+                for (var i in data) {
+                    if (data[i].loglevel === "Informational") {
+                        dict["Informational"] += 1;
+                        console.log("here")
+                    } else if (data[i].loglevel === "warning") {
+                        dict["warning"] += 1;
+                    } else if (data[i].loglevel === "error") {
+                        dict["error"] += 1;
                     }
+                }
 
-                    console.log(dict);
+                console.log(dict);
 
-                    for (let key in dict) {
-                        let nr = dict[key];
-                        let html = `<p>Title: ${key}, number of logs ${nr}</p>`;
-                        div.insertAdjacentHTML('beforeend', html);
-                    }
-                };
+                for (let key in dict) {
+                    let nr = dict[key];
+                    let html = `<p>Title: ${key}, number of logs ${nr}</p>`;
+                    div.insertAdjacentHTML('beforeend', html);
+                }
+            };
         }
 
 

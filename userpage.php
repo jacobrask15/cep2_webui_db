@@ -1,6 +1,6 @@
 <?php
-if (empty($_SESSION['user_name']) && $_SESSION['type'] != '2') {
-    header("Location: index.php");
+if ($_SESSION['type'] != '2') {
+    header("Location: home.php");
     exit();
 }
 ?>
@@ -19,15 +19,18 @@ if (empty($_SESSION['user_name']) && $_SESSION['type'] != '2') {
 
 <body>
 
-    <h1>Hello User,
-        <?php echo $_SESSION['user_name']; ?>
-    </h1>
+    <div class="header">
+        <h1>Hello User,
+            <?php echo $_SESSION['user_name']; ?>
+        </h1>
 
-    <a href="logout.php">Logout</a>
+        <a href="logout.php">Logout</a>
+    </div>
 
-    <iframe src="chart.html" name="targetframe" allowTransparency="true" scrolling="no" frameborder="0" width="1920"
+    <iframe src="chart.php" name="targetframe" allowTransparency="true" scrolling="no" frameborder="0" width="1920"
         height="1080">
     </iframe>
+
 
 </body>
 

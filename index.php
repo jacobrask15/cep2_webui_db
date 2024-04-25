@@ -1,3 +1,9 @@
+<?php
+session_start();
+session_unset();
+session_destroy();
+?>
+
 <!DOCTYPE html>
 
 <html>
@@ -12,7 +18,7 @@
 
 <body>
 
-     <form action="login.php" method="post">
+    <form action="login.php" method="post">
 
         <h2>LOGIN</h2>
 
@@ -22,21 +28,21 @@
 
         <?php } ?>
 
-            <div class="imgcontainer">
-        <img src="dawg.jpg" alt="Avatar" class="avatar">
-    </div>
+        <div class="imgcontainer">
+            <img src="dawg.jpg" alt="Avatar" class="avatar">
+        </div>
 
-    <div class="profile_container">
-        <label for="uname"><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="uname" required>
+        <div class="profile_container">
+            <label for="uname"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="uname" required>
 
-        <label for="password"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="password" required>
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="password" required>
 
-        <button type="submit">Login</button>
-    </div>
+            <button type="submit">Login</button>
+        </div>
 
-     </form>
+    </form>
 
 </body>
 
