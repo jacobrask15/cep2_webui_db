@@ -43,10 +43,14 @@ $message = isset($_GET['message']) ? $_GET['message'] : ''; // Get message from 
         <label for="endTime">End time: </label>
         <input type="time" name="endTime" value="<?php echo $data[0]['end'] ?>" /> <br>
         <label for="bathTimeout">Bathroom timeout: </label>
-        <input type="number" name="bathTimeout" value="<?php echo $data[0]['timeout_bath'] ?>" min="1" max="9999" />
+        <input type="number" name="bathTimeout" value="<?php echo $data[0]['timeout_bath'] ?>" min="0" max="9999" />
         <br>
+        <label for="notInBedTimeout">Citizen not in bed timeout: </label>
+        <input type="number" name="notInBedTimeout" value="<?php echo $data[0]['timeout_not_in_bed'] ?>" min="0"
+            max="9999" /> <br>
         <label for="Timeout">Other timeout: </label>
-        <input type="number" name="Timeout" value="<?php echo $data[0]['timeout_default'] ?>" min="1" max="9999" /> <br>
+        <input type="number" name="Timeout" value="<?php echo $data[0]['timeout_default'] ?>" min="0" max="9999" /> <br>
+
         <input type="submit" value="Save" />
     </form>
 

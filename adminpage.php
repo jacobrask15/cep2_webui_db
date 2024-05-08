@@ -27,7 +27,7 @@ if ($_SESSION['type'] != '1') {
     </div>
 
     <iframe src="settings.php" name="targetframe" allowTransparency="true" scrolling="no" frameborder="0" width="1920"
-        height="220">
+        height="300">
     </iframe>
 
     <iframe src="chart.php" name="targetframe" allowTransparency="true" scrolling="no" frameborder="0" width="1920"

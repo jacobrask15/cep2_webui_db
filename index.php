@@ -8,23 +8,19 @@ session_unset();
 <html>
 
 <head>
-
-    <title>LOGIN</title>
-
+    <title>Grandy Lights</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
 
     <form action="login.php" method="post">
 
+        <h1>Grandy Lights</h1>
         <h2>LOGIN</h2>
 
         <?php if (isset($_GET['error'])) { ?>
-
             <p class="error"><?php echo $_GET['error']; ?></p>
-
         <?php } ?>
 
         <div class="imgcontainer">

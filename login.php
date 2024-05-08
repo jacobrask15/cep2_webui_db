@@ -1,22 +1,20 @@
-<?php 
-
-session_start(); 
-
+<?php
 include "db_connection.php";
 
 $conn = OpenCon();
 
 if (isset($_POST['uname']) && isset($_POST['password'])) {
 
-    function validate($data){
+    function validate($data)
+    {
 
-       $data = trim($data);
+        $data = trim($data);
 
-       $data = stripslashes($data);
+        $data = stripslashes($data);
 
-       $data = htmlspecialchars($data);
+        $data = htmlspecialchars($data);
 
-       return $data;
+        return $data;
 
     }
 
@@ -30,13 +28,13 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
 
         exit();
 
-    }else if(empty($pass)){
+    } else if (empty($pass)) {
 
         header("Location: index.php?error=Password is required");
 
         exit();
 
-    }else{
+    } else {
 
         $sql = "SELECT * FROM logins WHERE Username='$uname' AND Password='$pass'";
 
@@ -50,6 +48,7 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
 
                 echo "Logged in!";
 
+                session_start();
                 $_SESSION['user_name'] = $row['Username'];
                 $_SESSION['type'] = $row['Type'];
 
@@ -57,7 +56,7 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
 
                 exit();
 
-            }else{
+            } else {
 
                 header("Location: index.php?error=Incorect User name or password");
 
@@ -65,7 +64,7 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
 
             }
 
-        }else{
+        } else {
 
             header("Location: index.php?error=Incorect User name or password");
 
@@ -75,7 +74,7 @@ if (isset($_POST['uname']) && isset($_POST['password'])) {
 
     }
 
-}else{
+} else {
     header("Location: index.php");
     exit();
 }
