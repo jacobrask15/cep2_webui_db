@@ -20,8 +20,8 @@ for ($x = 0; $x <= 100; $x++) {
     $minute = $rand % 60;
     $second = $rand % 60;
     $m = ($rand % 840) + 60;
-    $sqlquery = "INSERT INTO `event` (`timestamp_`, `loglevel`, `type_`, `device_id`, `device_type`, `measurement`) VALUES
-('2024-$month-$day $hour:$minute:$second', 'Informational', 'ToiletDuration', 'ROOM $room', 'PIR', '$m')";
+    $sqlquery = "INSERT INTO `events` (`timestamp_`, `loglevel`, `type_`, `device_id`, `device_type`, `measurement`) VALUES
+('2024-$month-$day $hour:$minute:$second', 'Informational', 'toilet', 'ROOM $room', 'PIR', '$m')";
 
 
     mysqli_query($conn, $sqlquery);

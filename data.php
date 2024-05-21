@@ -5,7 +5,7 @@ include "db_connection.php";
 
 $conn = OpenCon();
 
-$sqlQuery = "SELECT * FROM event ORDER BY timestamp_ DESC";
+$sqlQuery = "SELECT * FROM events ORDER BY timestamp_ DESC";
 
 $result = mysqli_query($conn, $sqlQuery);
 
