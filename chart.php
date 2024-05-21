@@ -192,7 +192,7 @@ if (!isset($_SESSION["user_name"])) {
                 // Loop through data
                 for (var i in data) {
                     // Skip entries that are not related to toilet visits
-                    if (data[i].type_ !== "toilet") {
+                    if (data[i].type_ !== "ToiletDuration") {
                         continue;
                     }
                     // Decompose timestamp
@@ -317,7 +317,7 @@ if (!isset($_SESSION["user_name"])) {
                         dict["Informational"] += 1;
                         console.log("here")
                     } else if (data[i].loglevel === "warning") {
-                        dict["warning"] += 1;
+                        dict["warning"] += 0.2;
                     } else if (data[i].loglevel === "error") {
                         dict["error"] += 1;
                     }
@@ -327,7 +327,7 @@ if (!isset($_SESSION["user_name"])) {
 
                 for (let key in dict) {
                     let nr = dict[key];
-                    let html = `<p>Title: ${key}, number of logs ${nr}</p>`;
+                    let html = `<p>Title: ${key}, number of logs ${Math.floor(nr)}</p>`;
                     div.insertAdjacentHTML('beforeend', html);
                 }
             };

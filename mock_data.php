@@ -4,10 +4,15 @@ header('Content-Type: application/json');
 include "db_connection.php";
 
 $conn = OpenCon();
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+$rooms = array("BEDROOM", "LIVINGROOM", "KITCHEN", "GUESTROOM", "BATHROOM");
 
 for ($x = 0; $x <= 100; $x++) {
     $rand = rand();
-    $room = $rand % 5 + 1;
+    $room = $rooms[$rand % count($rooms)];
     $day = $rand % 30 + 1;
     if ($day < 10) {
         $day = "0" . $day;
@@ -19,12 +24,22 @@ for ($x = 0; $x <= 100; $x++) {
     $hour = $rand % 24;
     $minute = $rand % 60;
     $second = $rand % 60;
-    $m = ($rand % 840) + 60;
-    $sqlquery = "INSERT INTO `events` (`timestamp_`, `loglevel`, `type_`, `device_id`, `device_type`, `measurement`) VALUES
-('2024-$month-$day $hour:$minute:$second', 'Informational', 'toilet', 'ROOM $room', 'PIR', '$m')";
+    $m = ($rand % 56) + 5;  // Measurement between 5 and 60 seconds
 
+    // Select "ToiletDuration" if the room is "BATHROOM", otherwise select "movement"
+    if ($room == "BATHROOM") {
+        $type = "ToiletDuration";
+    } else {
+        $type = "movement";
+    }
 
-    mysqli_query($conn, $sqlquery);
+    $sqlquery = "INSERT INTO `event` (`timestamp_`, `loglevel`, `type_`, `device_id`, `device_type`, `measurement`) VALUES
+    ('2024-$month-$day $hour:$minute:$second', 'Informational', '$type', '$room', 'PIR', '$m')";
+
+    if (!mysqli_query($conn, $sqlquery)) {
+        echo "Error: " . $sqlquery . "<br>" . mysqli_error($conn);
+    }
 }
 
 mysqli_close($conn);
+?>
